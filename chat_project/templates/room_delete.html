@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="flex items-start justify-center min-h-screen pt-20">
+        <div class="container">
+            <h1>Удаление чата</h1>
+            <br>
+            <br>
+            <hr>
+            <form action="{% url 'room_delete' room.slug %}" method="post" class="delete-form">
+                {% csrf_token %}
+                <p>Вы действительно хотите удалить этот чат?</p>
+                <br>
+                <input type="submit" value="Удалить" class="delete-button" />
+            </form>
+            <hr>
+            <br>
+            <div class="bottom">
+                <a href="/rooms/" class="button">К комнатам</a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .container {
+            max-width: 400px;
+        }
+
+        .delete-button {
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .bottom {
+            text-align: center;
+        }
+    </style>
+{% endblock content %}

@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% csrf_token %}
+
+{% block title %}Rooms | {% endblock %}
+
+{% block content %}
+    <div class="p-10 lg:p-20 text-center">
+        <h1 class="text-3xl lg:text-6xl text-white">Rooms</h1>
+        
+        <!-- Форма создания комнаты через rest api (с помощью ajax) -->
+        <form action="{% url 'room_create' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="hidden" name="room_id" value="{{ room.id }}">
+            <button type="submit" style="color: white; background-color: purple;">Создать комнату (rest api)</button>
+        </form>
+
+    </div>
+
+    <div class="w-full flex flex-wrap items-center">
+        {% for room in rooms %}
+            <div class="w-full lg:w-1/4 px-3 py-3">
+                <div class="p-4 bg-white shadow rounded-xl text-center">
+                    <h2 class="mb-5 text-2xl font-semibold">{{ room.name }} (id:{{ room.id }})</h2>
+
+                    <a href="{% url 'room' room.slug %}"
+                       class="px-5 py-3 block rounded-xl text-white bg-teal-600 hover:bg-teal-700">Join</a>
+
+                    <!-- <button id="btn-join" type="submit" style="background: purple; color: white;">Войти в в комнату (rest api)</button> -->
+
+
+                    <a href="{% url 'room_delete' room_name=room.slug %}"
+                       class="mt-4 px-5 py-3 block rounded-xl text-white bg-red-600 hover:bg-red-700">
+                        Delete Room
+                    </a>
+
+                    <a href="{% url 'room_update' pk=room.id %}"
+                       class="mt-4 px-5 py-3 block rounded-xl text-white bg-purple-600 hover:bg-purple-700">
+                        Изменить(rest api)
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="w-full lg:w-1/4 px-3 py-3">
+            <div class="p-4 bg-white shadow rounded-xl text-center">
+                <h2 class="mb-5 text-2xl font-semibold">Create New Room</h2>
+
+                <a href="{% url 'room_create' %}"
+                   class="px-5 py-3 block rounded-xl text-white bg-green-600 hover:bg-green-700">Create</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+function createRoom() {
+    const form = document.querySelector('form');
+    const roomId = form.room_id.value;
+
+    $.ajax({
+        url: "{% url 'room_create' %}",
+        type: 'POST',
+        data: { room_id: roomId },
+        success: function(response) {
+            if (response.success) {
+                // Обновление страницы или показ сообщения об успешном создании
+                alert('Комната успешно создана')
+            } else {
+            alert('Ошибка создания комнаты.');
+            }
+        }
+    });
+}
+
+
+
+
+// $(document).ready(function() {
+//     $("#btn-join").click(function() {
+//         $.ajax({
+//             url: "http://127.0.0.1:8000/rooms/{{ room.slug }}/",
+//             method: "GET",
+//             data: {
+//             room_id: room_id
+//             },
+            
+//         });
+//     });
+// });
+
+
+
+
+</script>
+
+{% endblock %}

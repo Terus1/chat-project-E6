@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="flex items-center justify-center">
+        <div class="bg-white rounded-lg shadow px-6 py-4">
+            <div class="flex items-center">
+
+                {% if picture %}
+                    <img class="w-20 h-20 border rounded-full object-cover object-center mr-4" src="{{ picture.url }}" alt="{{ user.username }} Profile">
+                {% else %}
+                    <div class="w-20 h-20 border rounded-full bg-gray-300 flex items-center justify-center mr-4">
+                        <a href="{% url 'edit_nickname' %}" class="text-gray-600 text-lg">{{ user.username|slice:":1" }}</a>
+                    </div>
+                {% endif %}
+                <div>
+                    <h2 class="text-xl font-bold">
+                        <a href="{% url 'edit_nickname' %}" class="hover:text-blue-500">{{ user.username }}</a>
+                    </h2>
+                    <p class="text-gray-600">Member since {{ user.date_joined|date:"F j, Y" }}</p>
+                    {% if request.user == user %}
+                        <a href="{% url 'edit_photo' %}" class="text-blue-500 underline">Add/Edit Photo</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
